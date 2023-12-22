@@ -15,16 +15,6 @@ class ChatroomChannel < ApplicationCable::Channel
     message.published = Time.now
     message.sender = data['sender']
     message.content = data['content']
-    debugger
-    # Messageモデルをレンダリングしてchatroom_channelへブロードキャストする
-    ActionCable.server.broadcast 'chatroom_channel',
-      {message: render_message(message)}
-  end
-
-  private
-
-  def render_message(message)
-    ApplicationController.renderer.render(partial: 'messages/message',
-      locals: { message: message })
+    Message.create!(published: message.published, sender: message.sender, content: message.content)
   end
 end
